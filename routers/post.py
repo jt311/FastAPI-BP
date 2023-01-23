@@ -55,7 +55,7 @@ def deletePost(id: int, db: Session = Depends(get_db), currUserID: int = Depends
     if currentPost.user_id != currUserID:
         raise HTTPException(
             status_code = status.HTTP_403_FORBIDDEN,
-            detail = "Not authorised to perform requested action"
+            detail = "Not authorised to delete post"
         )
     
     currentPostQuery.delete(synchronize_session=False)
@@ -78,7 +78,7 @@ def updatePost(id: int, post: PostBase, db: Session = Depends(get_db), currUserI
     if currentPost.user_id != currUserID:
         raise HTTPException(
             status_code = status.HTTP_403_FORBIDDEN,
-            detail = "Not authorised to perform requested action"
+            detail = "Not authorised to update post"
         )
 
     currentPostQuery.update(values = post.dict())
