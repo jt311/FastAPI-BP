@@ -13,6 +13,7 @@ class Post(Base):
     published = Column(Boolean, server_default='True', nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable = False)
+    tag = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable = True)
     creator = relationship("User")
 
 class User(Base):
