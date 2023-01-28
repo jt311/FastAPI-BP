@@ -14,7 +14,7 @@ class Post(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable = False)
     tag = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable = True)
-    creator = relationship("User")
+    creator = relationship("User", foreign_keys="Post.user_id")
 
 class User(Base):
     __tablename__ = "users"
