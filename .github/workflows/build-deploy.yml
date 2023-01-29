@@ -12,7 +12,7 @@ jobs:
   Job1:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Initiating Job1"
+      - run: echo "Initiating job1"
       - name: Pulling git repo
         uses: actions/checkout@v3
     
