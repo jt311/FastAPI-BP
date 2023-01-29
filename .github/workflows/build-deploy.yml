@@ -1,0 +1,18 @@
+name: Build and Deploy Code
+
+on:
+  push:
+    branches:
+      - "master"
+  pull_request:
+    branches:
+      - "master"
+
+jobs:
+  Job1:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Initiating Job1"
+      - name: Pulling git repo
+        uses: actions/checkout@v3
+    
