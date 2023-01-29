@@ -20,7 +20,7 @@ def read_root(db: Session = Depends(get_db), qpLimit: int = 10, qpSkip: int = 0,
     
     return posts
 
-@router.get("/{item_id}", dependencies=[Depends(oauth2.getCurrentUser)])
+@router.get("/{item_id}", response_model=PostOutput, dependencies=[Depends(oauth2.getCurrentUser)])
 def read_item(item_id: int, db: Session = Depends(get_db)):
     currentPost = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
         models.Vote, models.Vote.post_id == models.Post.id, isouter = True).group_by(models.Post.id).filter(
@@ -78,9 +78,8 @@ def updatePost(id: int, post: PostBase, db: Session = Depends(get_db), currUserI
     if currentPost.user_id != currUserID:
         raise HTTPException(
             status_code = status.HTTP_403_FORBIDDEN,
-            detail = "Not authorised to update post"
-        )
+            detail = "Not authorised to update post")
 
     currentPostQuery.update(values = post.dict())
     db.commit()
-    return currentPost
+    return currentPost 

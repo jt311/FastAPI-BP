@@ -21,8 +21,7 @@ def loginUser(userCredentials: OAuth2PasswordRequestForm = Depends(), db: Sessio
     
     accessToken = oauth2.createAccessToken(
         data = {"user_id": currentUser.id},
-        expireDelta = timedelta(minutes = oauth2.ACCESS_TOKEN_EXPIRE_MINUTES)
-    )
+        expireDelta = timedelta(minutes = oauth2.ACCESS_TOKEN_EXPIRE_MINUTES))
 
     return {
         "access_token": accessToken,

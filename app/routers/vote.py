@@ -35,7 +35,7 @@ def votePost(vote: VotePost, db: Session = Depends(get_db), currUserID: int = De
         if not voteFoundStatus:
             raise HTTPException(
                 status_code = status.HTTP_404_NOT_FOUND,
-                detail = f"Post with ID: {vote.post_id} does not exist. Cannot vote")
+                detail = f"Vote for Post with ID: {vote.post_id} does not exist. Cannot downvote")
         else:
             voteQuery.delete(synchronize_session=False)
             db.commit()
