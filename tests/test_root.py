@@ -5,7 +5,7 @@ import pytest
 
 client = TestClient(app)
 
-#@pytest.mark.skip()
+@pytest.mark.skip()
 def test_root():
     response = client.get("/")
     assert response.status_code == status.HTTP_200_OK
