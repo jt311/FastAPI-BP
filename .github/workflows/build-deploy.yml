@@ -10,6 +10,16 @@ on:
 
 jobs:
   build:
+    env:
+      DB_NAME: FastAPI
+      DB_HOSTNAME: localhost
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: josh
+      SECRET_KEY: ef16c1ec54844029431e5386b0f2b1e165c4f1f44d18b2dd21fb86b91870d5b4
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      
     runs-on: ubuntu-latest
     steps:
       - run: echo "Initiating job1"
