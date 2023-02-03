@@ -1,5 +1,5 @@
 import pytest
-from app.schemas import PostOutput, PostResponse
+from app.schemas import PostOutput, PostResponse, InvalidTitleError
 from fastapi import status
 
 #@pytest.mark.skip()
@@ -48,7 +48,7 @@ def test_get_post_by_id(authorise_client, generate_posts, idx):
     assert post.Post.user_id == generate_posts[idx].user_id
 
 
-#@pytest.mark.skip()
+@pytest.mark.skip()
 @pytest.mark.parametrize('title, content, published', [
     ("Title1", "newContent", True),
     ("Title2", "newContent2", False),
@@ -73,7 +73,7 @@ def test_unauthorised_user_delete_post(client, generate_posts):
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
-#pytest.mark.skip()
+#@pytest.mark.skip()
 @pytest.mark.parametrize('id', [888, 389, 422])
 def test_delete_post_not_exist(authorise_client, generate_posts, id):
     response = authorise_client.delete(f"/posts/{id}")
@@ -82,20 +82,20 @@ def test_delete_post_not_exist(authorise_client, generate_posts, id):
     assert response.json()['detail'] == f"Post with id {id} does not exist"
 
 
-#pytest.mark.skip()
+#@pytest.mark.skip()
 def test_delete_post_not_permitted(authorise_client, generate_posts):
     response = authorise_client.delete(f"/posts/{generate_posts[3].id}")
     assert response.status_code == status.HTTP_403_FORBIDDEN
     assert response.json()['detail'] == "Not authorised to delete post"
 
-#pytest.mark.skip()
+#@pytest.mark.skip()
 @pytest.mark.parametrize('idx', [0,1,2])
 def test_delete_post(authorise_client, generate_posts, idx):
     response = authorise_client.delete(f"/posts/{generate_posts[idx].id}")
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
 
-#pytest.mark.skip()
+@pytest.mark.skip()
 @pytest.mark.parametrize('title, content, published, idx', [
     ('updatedTitle1', 'updatedContent1', True, 0),
     ('updatedTitle2', 'updatedContent2', False, 1),
@@ -114,7 +114,7 @@ def test_update_post(authorise_client, generate_posts, title, content, published
     assert updated_post.published == published
 
 
-#pytest.mark.skip()
+@pytest.mark.skip()
 def test_unauthorised_update_post(client, generate_posts):
     response = client.put(f"/posts/{generate_posts[0].id}",
         json = {"title": "updatedTitle",
@@ -124,7 +124,7 @@ def test_unauthorised_update_post(client, generate_posts):
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
-#pytest.mark.skip()
+@pytest.mark.skip()
 def test_update_post_not_permitted(authorise_client, generate_posts):
     response = authorise_client.put(f"/posts/{generate_posts[3].id}",
                 json = {"title": "updatedTitle",
@@ -135,7 +135,7 @@ def test_update_post_not_permitted(authorise_client, generate_posts):
     assert response.json()['detail'] == "Not authorised to update post"
 
 
-#pytest.mark.skip()
+@pytest.mark.skip()
 @pytest.mark.parametrize('id', [888, 389, 422])
 def test_update_post_not_exist(authorise_client, generate_posts, id):
     response = authorise_client.put(f"/posts/{id}",
@@ -146,3 +146,13 @@ def test_update_post_not_exist(authorise_client, generate_posts, id):
     print(f"Generated {len(generate_posts)} posts")
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json()['detail'] == f"Post with id: {id} does not exist"
+
+
+#@pytest.mark.skip()
+def test_invalid_title(authorise_client):
+    with pytest.raises(InvalidTitleError, match="Title must begin with Capital Letter"):
+        authorise_client.post("/posts",
+            json = {"title": "hello",
+                    "content": "hazel is cool",
+                    "published": True})
+

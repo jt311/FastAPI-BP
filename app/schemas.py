@@ -1,3 +1,4 @@
+import pydantic
 from pydantic import BaseModel, EmailStr
 from typing import Optional, Literal
 from datetime import datetime
@@ -9,11 +10,25 @@ class UserResponse(BaseModel):
     class Config:
         orm_mode = True
 
+class InvalidTitleError(Exception):
+    def __init__(self, value: str, message: str):
+        self.value = value
+        self.message = message
+        super().__init__(message)
+
 class PostBase(BaseModel):
     title: str
     content: str
     published: Optional[bool] = True
 
+    @pydantic.validator("title")
+    @classmethod
+    def validTitle(cls, value: str):
+        if value[0].islower(): raise InvalidTitleError(
+                value = value,
+                message = "Title must begin with Capital Letter")
+        return value
+    
 class PostResponse(PostBase):
     id: int
     created_at: datetime
@@ -24,7 +39,7 @@ class PostResponse(PostBase):
 
 class PostOutput(BaseModel):
     Post: PostResponse
-    votes: int   
+    votes: int
 
 class UserCreate(BaseModel):
     email: EmailStr
